@@ -1,5 +1,5 @@
 # Skirt Sniffer
-A tool for my girlfriend to mine data, detect newly added data and spam her with email. You won't believe it or not, but this skirt shop is almost like a cult of crazy women buying, trading, selling skirts. I just wanted to try how to do this kind of stuff in python, so it's an example of how to use BeautifulSoup. Everything else is pretty much common stuff like sending an email, using sqlite, etc. Running the script performs a single iteration so the best way to mine data continuously is to write a shell script a run it once a while.
+A tool for my girlfriend to mine data, detect newly added data and spam her with email. You won't believe it or not, but this skirt shop is almost like a cult of crazy women buying, trading, selling skirts. I just wanted to try how to do this kind of stuff in python, so it's an example of how to use BeautifulSoup. Everything else is pretty much ordinary like sending an email, using sqlite, etc. Running the script performs a single iteration, so the best way to mine data continuously is to write a shell script and run the python once a while.
 
 # How to install?
 Dependencies: jinja2, bs4, sqlite3, smtplib
