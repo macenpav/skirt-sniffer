@@ -3,16 +3,16 @@ import requests
 
 
 DIV_NAME = r"productTitleContent"
-BASE_URL = r"https://www.blackmountain.cz/"
+BASE_URL = r"https://www.blackmountain.cz"
 
 
 def get_url(page):
-    return BASE_URL + r'request.php?request_uri=/sukne&action=Get_products&pages[0]=blackmountain&' \
+    return BASE_URL + r'/request.php?request_uri=/sukne&action=Get_products&pages[0]=blackmountain&' \
             'pages[1]=eshop&pages[2]=1-1-Sukne&pages[3]=0&pages[4]=42&sort=42&man=9&page={0}'.format(page)
 
 
 def get_url_print():
-    return BASE_URL + r'tisky'
+    return BASE_URL + r'/tisky'
 
 
 def get_div_elements(url, class_name):
