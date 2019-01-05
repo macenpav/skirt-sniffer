@@ -1,38 +1,38 @@
 import smtplib
-from email.message import EmailMessage
+import configparser
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.header import Header
+from email.utils import formataddr
+from os import path
 
-# TODO: grab smtp addr and port from a config file
-google_smtp_addr = r"smtp.gmail.com"
-google_smtp_port = 465
-
+DIR_PATH = path.dirname(path.realpath(__file__))
+CONFIG_FILENAME = path.join(DIR_PATH, r"config.ini")
 
 class Email:
     def __init__(self):
-        self.recipients = []
-        self.sender = r"****@****.**" # TODO: grab sender from a config file
-        self.password = r"***"  # TODO: grab password from a config file
+        self.config = configparser.ConfigParser()
+        self.config.read(CONFIG_FILENAME)
         self.subject = r"No subject"
-
-    # TODO: deprecate this method and also grab this from a config file
-    def add_recipient(self, email):
-        self.recipients.append(email)
+        self.content = r""
 
     def set_subject(self, subject):
         self.subject = subject
 
+    def set_content(self, content):
+        self.content = content
+
     def send(self):
-        msg = EmailMessage()
+        msg = MIMEMultipart('alternative')
 
         msg['Subject'] = self.subject
-        msg['From'] = self.sender
-        msg['To'] = r", ".join(self.recipients)
+        msg['From'] = formataddr((str(Header('Sukničkář Pavel', 'utf-8')), self.config.get('General', 'Sender')))
+        msg['To'] = self.config.get('General', 'Recipients')
 
-        try:
-            server = smtplib.SMTP_SSL(google_smtp_addr, google_smtp_port)
-            server.ehlo()
-            server.login(self.sender, self.password)  # login is the same as sender
-            server.send_message(msg)
-            server.quit()
+        server = smtplib.SMTP_SSL(self.config.get('SMTP', 'Address'), self.config.get('SMTP', 'Port'))
+        server.ehlo()
+        server.login(self.config.get('General', 'Sender'), self.config.get('General', 'Password'))
+        msg.attach(MIMEText(self.content, 'html'))
+        server.send_message(msg)
+        server.quit()
 
-        except:
-            pass  # TODO: log something

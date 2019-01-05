@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{{ title }}</title>
+    </head>
+    <body>
+        <p>
+            Ahoj Natálko,
+        </p>
+        <p>
+        Přišly nové sukničky:<br/>
+        {% for i in items %}
+            <a href="{{ i.url }}">{{ i.name }}</a><br/>
+        {% endfor %}
+        </p>
+        <p>
+            Tvůj sukničkář.
+        </p>
+    </body>
+</html>

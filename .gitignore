@@ -102,3 +102,9 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# files being deployed, created ...
+blackmountain.db
+config.ini
+run_skirt_sniffer.sh
+run_skirt_sniffer_init.sh
