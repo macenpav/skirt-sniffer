@@ -36,6 +36,14 @@ def mine(url, class_name=DIV_NAME):
             name = elem.text
             if id not in products:
                 products[pid] = {'name': name, 'url': BASE_URL + href}
-        except IndexError:  # skip errors in case string for some reason doesn't match expected pattern
-            pass
+        except IndexError: # there can be one other type of url e.g. /lesnipohadkadopasu-34
+            try:
+                ident_split = url_split[1].split("-")
+                pid = ident_split[1]
+                name = elem.text
+                if id not in products:
+                    products[pid] = {'name': name, 'url': BASE_URL + href}
+            except IndexError: # skip errors in case string for some reason doesn't match expected pattern
+                pass
+
     return products
