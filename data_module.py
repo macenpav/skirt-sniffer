@@ -1,9 +1,17 @@
 from bs4 import BeautifulSoup
 import requests
-
+from os import popen
 
 DIV_NAME = r"productTitleContent"
 BASE_URL = r"https://www.blackmountain.cz"
+
+
+def is_server_available():
+    out = str(popen('curl -s -w "%{http_code}" -L ' + BASE_URL + ' -o /dev/null').read())
+    if out == "200":  # HTTP request success
+        return True
+    else:
+        return False
 
 
 def get_url(page):

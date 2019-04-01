@@ -3,11 +3,13 @@ import email_module
 import db_module
 from jinja2 import Environment, FileSystemLoader
 from os import path
+import time
 
 DIR_PATH = path.dirname(path.realpath(__file__))
 
 NEW_SKIRT_SUBJECT = r"Novinka! - {0}"
 NEW_PRINT_SUBJECT = r"NOVÉ TISKY! - {0}"
+PAGE_LIMIT = 20   # limit to read pages so we don't deadlock while mining data
 
 
 def send_email(subject_base, data):
@@ -33,12 +35,13 @@ def run_base():
     conn = db_module.open_connection()
     db_module.create_database(conn, table_name)
     new_data = []
+
     while True:
         url = data_module.get_url(page_no)
         products = data_module.mine(url)
 
         # mine until we can, we don't know how many pages are in the e-shop
-        if products:
+        if products and (page_no < PAGE_LIMIT):
             new_products = db_module.insert_products(conn, table_name, products)
             if new_products:
                 for prod in new_products:
@@ -47,10 +50,16 @@ def run_base():
                 break
 
             page_no += 1
+        else:
+            break
+
     db_module.close_connection(conn)
 
     if new_data:
+        print("run_base({0}): New data found - sending email.".format(str(time.time())))
         send_email(NEW_SKIRT_SUBJECT, new_data)
+    else:
+        print("run_base({0}): No new data.".format(str(time.time())))
 
 
 def run_print():
@@ -68,9 +77,19 @@ def run_print():
     db_module.close_connection(conn)
 
     if new_data is not None:
+        print("run_print({0}): New data found - sending email.".format(str(time.time())))
         send_email(NEW_PRINT_SUBJECT, new_data)
+    else:
+        print("run_print({0}): No new data.")
 
 
 if __name__ == "__main__":
-    run_base()
-    run_print()
+    print("main({0}): Checking if server is available.".format(str(time.time())))
+    if data_module.is_server_available() is False:
+        print("main({0}): Unable to ping server.".format(str(time.time())))
+    else:
+        print("main({0}): Starting to mine data.".format(str(time.time())))
+        run_base()
+        run_print()
+        print("main({0}): Finished mining.".format(str(time.time())))
+
