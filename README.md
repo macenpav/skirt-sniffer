@@ -4,4 +4,4 @@ A tool for my girlfriend to mine data, detect newly added data and spam her with
 # How to install?
 Dependencies: jinja2, bs4, sqlite3, smtplib
 1) Rename config-sample.ini to config.ini and fill in the details, you can use your gmail account for example
-2) Write your shell script to run skirt-sniffer.py once a while (e.g. every 15 seconds) and run it in the background
+2) Write your shell script to run skirt-sniffer.py once a while (e.g. every 15 seconds) and run it in the background or you can use crontab (up to you)
