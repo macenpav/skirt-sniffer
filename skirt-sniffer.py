@@ -14,7 +14,7 @@ DAY_INIT_SUBJECT = r"Keporkak se probouzí! - {0}"
 PAGE_LIMIT = 20   # limit to read pages so we don't deadlock while mining data
 
 
-def send_email(subject_base, data):
+def send_email(subject_base, data, **kwargs):
     email = email_module.Email()
     subject = subject_base.format(data[0]['name']);
     if len(data) > 1:
@@ -26,7 +26,12 @@ def send_email(subject_base, data):
 
     email.set_content(template.render(title=subject, items=data))
     email.set_subject(subject)
-    email.send(False)  # send email to regular Recipients
+
+    if 'is_print' in kwargs:
+        if kwargs['is_print']:
+            email.send(email_module.CONFIG_PRINT_R)  # send email to print Recipients
+        else:
+            email.send(email_module.CONFIG_REGULAR_R)  # send email to regular Recipients
 
 
 def send_wakeup_email():
@@ -39,7 +44,7 @@ def send_wakeup_email():
 
     email.set_content(template.render(title=subject))
     email.set_subject(subject)
-    email.send(True)  # send email to Admin only
+    email.send(email_module.CONFIG_ADMIN_R)  # send email to Admin only
 
 
 def run_base():
@@ -70,7 +75,7 @@ def run_base():
 
     if new_data:
         print("run_base({0}): New data found - sending email.".format(str(time.time())))
-        send_email(NEW_SKIRT_SUBJECT, new_data)
+        send_email(NEW_SKIRT_SUBJECT, new_data, is_print=False)
     else:
         print("run_base({0}): No new data.".format(str(time.time())))
 
@@ -89,7 +94,7 @@ def run_print():
 
     if new_data:
         print("run_print({0}): New data found - sending email.".format(str(time.time())))
-        send_email(NEW_PRINT_SUBJECT, new_data)
+        send_email(NEW_PRINT_SUBJECT, new_data, is_print=True)
     else:
         print("run_print({0}): No new data.".format(str(time.time())))
 
