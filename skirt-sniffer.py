@@ -26,7 +26,7 @@ def send_email(subject_base, data):
 
     email.set_content(template.render(title=subject, items=data))
     email.set_subject(subject)
-    email.send()
+    email.send(False)  # send email to regular Recipients
 
 
 def send_wakeup_email():
@@ -39,7 +39,7 @@ def send_wakeup_email():
 
     email.set_content(template.render(title=subject))
     email.set_subject(subject)
-    email.send()
+    email.send(True)  # send email to Admin only
 
 
 def run_base():

@@ -22,12 +22,16 @@ class Email:
     def set_content(self, content):
         self.content = content
 
-    def send(self):
+    def send(self, is_admin_email):
         msg = MIMEMultipart('alternative')
 
         msg['Subject'] = self.subject
         msg['From'] = formataddr((str(Header('Sukničkář Pavel', 'utf-8')), self.config.get('General', 'Sender')))
-        msg['To'] = self.config.get('General', 'Recipients')
+
+        if is_admin_email:
+            msg['To'] = self.config.get('General', 'Admin_Recipients')
+        else:
+            msg['To'] = self.config.get('General', 'Recipients')
 
         server = smtplib.SMTP_SSL(self.config.get('SMTP', 'Address'), self.config.get('SMTP', 'Port'))
         server.ehlo()
